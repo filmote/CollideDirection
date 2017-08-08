@@ -8,7 +8,7 @@ int16_t y2 = 22;
 
 bool checkCollision = false;
 
-enum Direction : uint8_t {
+enum class Direction : uint8_t {
   None = 0,
   Up = 1,  
   Down = 2,
@@ -53,12 +53,14 @@ void loop() {
 
     if (direction != Direction::None) {
 
-      if (direction & Direction::Up)      { Serial.print("Up "); }
-      if (direction & Direction::Down)    { Serial.print("Down "); }
-      if (direction & Direction::Left)    { Serial.print("Left "); }
-      if (direction & Direction::Right)   { Serial.print("Right "); }
+      Serial.print("Relative to the fixed rectangle, the moving rectangle is ");
+      
+      if ((direction & Direction::Up) == Direction::Up)         { Serial.print("above "); }
+      if ((direction & Direction::Down) == Direction::Down)     { Serial.print("below "); }
+      if ((direction & Direction::Left) == Direction::Left)     { Serial.print("left "); }
+      if ((direction & Direction::Right) == Direction::Right)   { Serial.print("right "); }
 
-      Serial.println("");
+      Serial.println(".");
       
     }
     
@@ -82,7 +84,7 @@ void loop() {
  */
 bool collide(Rect rect1, Rect rect2, Direction testDirection) {
   
-  return (collide(rect1, rect2) & testDirection);
+  return ((collide(rect1, rect2) & testDirection) == testDirection);
   
 }
 
@@ -94,7 +96,7 @@ bool collide(Rect rect1, Rect rect2, Direction testDirection) {
  */
 Direction collide(Rect rect1, Rect rect2) {
 
-  uint8_t direction = (uint8_t)Direction::None;
+  Direction direction = Direction::None;
  
   if (!(rect2.x                >= rect1.x + rect1.width  ||
         rect2.x + rect2.width  <= rect1.x                ||
